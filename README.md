@@ -1,1 +1,1 @@
-#A search-engine backend application based on apache solr
+A search-engine backend application based on apache solr

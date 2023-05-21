@@ -1,6 +1,7 @@
 version: '3'
 services:
   mysqldb:
+    container_name: mysql
     image: mysql
     ports:
       - 3306:3306
@@ -12,17 +13,19 @@ services:
     volumes:
       - mysqlV:/var/lib/mysql
   backend-container:
-    image: backend-image
+    container_name: backend-container
+    image: backend-image:2
     ports:
-      - 8080:8080
+      - 8081:8081
     environment:
-      - spring.datasource.url=jdbc:mysql://-mysqldb:3306/main_bayan
+      - spring.datasource.url=jdbc:mysql://mysql:3306/main_bayan
   # frontend-container:
   #   image: frontend-image
   #   ports:
   #     - 9090:9090
   solr-container:
-    image: solr:8.11.2
+    container_name: solr-container
+    image: solr:5.5.0
     ports:
       - 8983:8983
     volumes:

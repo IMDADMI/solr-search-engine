@@ -5,6 +5,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -24,21 +25,32 @@ public class SearchController {
     }
 
     @PostMapping(path = "/")
-    public SolrDocumentList getQuery(@RequestBody Map<String,String> queryParameter) throws SolrServerException, IOException {
+    public ResponseEntity<SolrDocumentList> getQuery(@RequestBody Map<String,String> queryParameter) throws SolrServerException, IOException {
         String query = queryParameter.get("query");
         int page = Integer.parseInt(queryParameter.get("page"));
         System.out.println("sss");
-        return service.query(query,page);
+        SolrDocumentList entries = service.query(query,page);
+        long docs = entries.getNumFound();
+        long pages = entries.getNumFound()/10;
+        HttpHeaders httpHeaders = new HttpHeaders();
+        System.out.println("docs are : "+docs);
+        httpHeaders.add("docs", String.valueOf(docs));
+        httpHeaders.add("pages", String.valueOf(pages));
+        return new ResponseEntity<>(entries,httpHeaders,HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{query}")
-    public SolrDocumentList getTest(@PathVariable String query)  {
-        return service.query(query,1);
+    @GetMapping(path = "/{query}/{page}")
+    public SolrDocumentList getTest(@PathVariable String query, @PathVariable String page)  {
+        return service.query(query,Integer.parseInt(page));
     }
     @GetMapping(path = "")
-    public SolrDocumentList getTest()  {
+    public SolrDocumentList getAll()  {
         System.out.println("the value of sql url is : "+this.mysql);
-        return service.query("*:*",1);
+        SolrDocumentList entries = service.query("*:*",1);
+        long docs = entries.getNumFound();
+        long pages = entries.getNumFound()/10;
+        System.out.println("docs are : "+docs);
+        return entries;
     }
 
 

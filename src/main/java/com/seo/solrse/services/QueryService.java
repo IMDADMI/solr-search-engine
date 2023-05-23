@@ -28,7 +28,7 @@ public class QueryService {
     public SolrDocumentList getSolrClient(MapSolrParams queryParams) {
         // solr-container is the name of solr container
         final String solrUrl = "http://solr-container:8983/solr";
-//         final String solrUrl = "http://localhost:8984/solr";
+//         final String solrUrl = "http://localhost:8983/solr";
         HttpSolrClient client = new HttpSolrClient.Builder(solrUrl)
                 .withConnectionTimeout(10000)
                 .withSocketTimeout(60000)
@@ -39,6 +39,7 @@ public class QueryService {
     private SolrDocumentList getDoc(MapSolrParams queryParams, HttpSolrClient client2) {
         try {
             QueryResponse response = client2.query("secCore", queryParams);
+//            QueryResponse response = client2.query("secCore", queryParams);
             final SolrDocumentList documents = response.getResults();
             return documents;
 

@@ -15,6 +15,13 @@ import java.util.Map;
 @Service
 public class QueryService {
 
+    /**
+     * in this method we set the parameters of the query including the <b>q<b/>, the <b>rows</b>, and the <b>start</b>
+     * to achieve the pagination of the application
+     * @param query the query that the user type
+     * @param page the 10<sup>th</sup>page
+     * @return return list of the result from the sole server
+     */
     public SolrDocumentList query(String query, int page) {
         System.out.println("inside the query method : \n" + query);
         final Map<String, String> queryParamMap = new HashMap<String, String>();
@@ -25,6 +32,11 @@ public class QueryService {
         return getSolrClient(queryParams);
     }
 
+    /**
+     * This method make the connection with the solr server
+     * @param queryParams the query parameters that we defined earlier
+     * @return the results as solrDocs
+     */
     public SolrDocumentList getSolrClient(MapSolrParams queryParams) {
         // solr-container is the name of solr container
         final String solrUrl = "http://solr-container:8983/solr";
@@ -36,6 +48,13 @@ public class QueryService {
         return getDoc(queryParams, client);
     }
 
+
+    /**
+     *this method make the connection with the solr Core abd retrieve the result from it
+     * @param queryParams the query
+     * @param client2 the client
+     * @return
+     */
     private SolrDocumentList getDoc(MapSolrParams queryParams, HttpSolrClient client2) {
         try {
             QueryResponse response = client2.query("secCore", queryParams);

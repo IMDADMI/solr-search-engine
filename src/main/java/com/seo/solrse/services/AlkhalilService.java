@@ -17,6 +17,15 @@ import java.util.Arrays;
 @Service
 public class AlkhalilService {
 
+
+    /***
+     * this method take the query of the user and lemmitize it using al-khalil lemmitizer
+     * @param query the query of the user
+     * @return return a string that contain the lemma separated by a space
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     */
     public String convertToLemmas(String query) throws IOException, ParserConfigurationException, SAXException {
         query.replaceAll(",","");
         query.replaceAll("\\.","");
@@ -33,6 +42,15 @@ public class AlkhalilService {
 
         return getContentFromXML("src/query.xml");
     }
+
+    /***
+     * this method get all the nodes in the xml file
+     * @param path take the path of the xml file
+     * @return the list of nodes
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     */
     private NodeList getItems(String path) throws IOException,ParserConfigurationException, SAXException {
         File inputFile = new File(path);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -41,6 +59,15 @@ public class AlkhalilService {
         doc.getDocumentElement().normalize();
         return  doc.getElementsByTagName("res");
     }
+
+    /***
+     * here in this method we get the content from the xml file which is the lemmas and the words
+     * @param path the path of the xml file
+     * @return lemmas separated by a space
+     * @throws ParserConfigurationException
+     * @throws IOException
+     * @throws SAXException
+     */
     private String getContentFromXML(String path) throws ParserConfigurationException, IOException, SAXException {
         StringBuilder builder = new StringBuilder();
         NodeList nList = getItems(path);
@@ -53,6 +80,12 @@ public class AlkhalilService {
         }
         return builder.toString();
     }
+
+    /***
+     * this method fix and return the lemma without any special character
+     * @param lemma
+     * @return return the fixed lemma
+     */
     private static String removeSpecialCharacters(String lemma) {
         return (lemma.replaceAll("[،؟.\\[\\]{}()’`]", " ")).replaceAll("EOL","");
     }
